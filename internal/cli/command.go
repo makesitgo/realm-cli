@@ -34,13 +34,13 @@ type CommandInputs interface {
 
 // InputResolver is an input resolver
 type InputResolver interface {
-	Resolve(profile *Profile, ui terminal.UI, appData AppData) error
+	Resolve(profile *Profile, ui terminal.UI) error
 }
 
 // CommandPreparer handles the command setup phase
 // This interface maps 1:1 to Cobra's Command.PreRunE phase
 type CommandPreparer interface {
-	Setup(profile *Profile, ui terminal.UI, appData AppData) error
+	Setup(profile *Profile, ui terminal.UI) error
 }
 
 // CommandResponder handles the command feedback phase
@@ -81,6 +81,12 @@ type CommandDefinition struct {
 	Aliases []string
 }
 
+type UsagePrinter interface {
+	PrintUsage() bool
+}
+
 type errSupressUsage struct {
 	error
 }
+
+func (err errSupressUsage) PrintUsage() bool { return false }
