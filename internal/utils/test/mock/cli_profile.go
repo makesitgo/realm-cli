@@ -18,6 +18,9 @@ func NewProfile(t *testing.T) *cli.Profile {
 	return profile
 }
 
+// NewProfileFromTmpDir returns a new CLI profile with a random name
+// and a current working directory based on a temporary directory
+// along with the associated cleanup function
 func NewProfileFromTmpDir(t *testing.T, name string) (*cli.Profile, func()) {
 	t.Helper()
 

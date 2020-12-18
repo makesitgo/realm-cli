@@ -27,6 +27,7 @@ type ProjectAppInputs struct {
 	App     string
 }
 
+// Filter returns a realm.AppFlter based on the inputs
 func (i ProjectAppInputs) Filter() realm.AppFilter { return realm.AppFilter{i.Project, i.App} }
 
 // Flags registers the project app input flags to the provided flag set

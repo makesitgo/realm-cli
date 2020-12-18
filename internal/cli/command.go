@@ -81,6 +81,7 @@ type CommandDefinition struct {
 	Aliases []string
 }
 
+// UsagePrinter controls whether a command's usage is printed alongside an error
 type UsagePrinter interface {
 	PrintUsage() bool
 }
