@@ -32,7 +32,7 @@ func TestAppInitInputsResolve(t *testing.T) {
 		test        func(t *testing.T, i inputs)
 	}{
 		{
-			description: "With no flags set should prompt for just name and set location and deployment model to defaults",
+			description: "With no flags set should prompt for just name and set cli.AppLocation and deployment model to defaults",
 			procedure: func(c *expect.Console) {
 				c.ExpectString("App Name")
 				c.SendLine("test-app")
@@ -45,7 +45,7 @@ func TestAppInitInputsResolve(t *testing.T) {
 			},
 		},
 		{
-			description: "With a name flag set should prompt for nothing else and set location and deployment model to defaults",
+			description: "With a name flag set should prompt for nothing else and set cli.AppLocation and deployment model to defaults",
 			inputs:      inputs{Name: "test-app"},
 			procedure:   func(c *expect.Console) {},
 			test: func(t *testing.T, i inputs) {
@@ -55,17 +55,17 @@ func TestAppInitInputsResolve(t *testing.T) {
 			},
 		},
 		{
-			description: "With name location and deployment model flags set should prompt for nothing else",
+			description: "With name cli.AppLocation and deployment model flags set should prompt for nothing else",
 			inputs: inputs{
 				Name:            "test-app",
-				DeploymentModel: deploymentModelLocal,
-				Location:        locationOregon,
+				DeploymentModel: cli.AppDeploymentModelLocal,
+				Location:        cli.AppLocationOregon,
 			},
 			procedure: func(c *expect.Console) {},
 			test: func(t *testing.T, i inputs) {
 				assert.Equal(t, "test-app", i.Name)
-				assert.Equal(t, deploymentModelLocal, i.DeploymentModel)
-				assert.Equal(t, locationOregon, i.Location)
+				assert.Equal(t, cli.AppDeploymentModelLocal, i.DeploymentModel)
+				assert.Equal(t, cli.AppLocationOregon, i.Location)
 			},
 		},
 		{

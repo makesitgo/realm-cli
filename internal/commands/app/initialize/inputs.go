@@ -26,8 +26,8 @@ type inputs struct {
 	From            string
 	FromType        string
 	Name            string
-	DeploymentModel deploymentModel
-	Location        location
+	DeploymentModel cli.AppDeploymentModel
+	Location        cli.AppLocation
 }
 
 func (i *inputs) Resolve(profile *cli.Profile, ui terminal.UI) error {
@@ -55,10 +55,10 @@ func (i *inputs) Resolve(profile *cli.Profile, ui terminal.UI) error {
 				return err
 			}
 		}
-		if i.DeploymentModel == deploymentModelNil {
+		if i.DeploymentModel == cli.AppDeploymentModelNil {
 			i.DeploymentModel = flagDeploymentModelDefault
 		}
-		if i.Location == locationNil {
+		if i.Location == cli.AppLocationNil {
 			i.Location = flagLocationDefault
 		}
 	}

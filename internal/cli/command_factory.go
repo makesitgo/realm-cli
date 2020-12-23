@@ -142,8 +142,8 @@ func (factory *CommandFactory) Close() {
 // Run executes the command
 func (factory *CommandFactory) Run(cmd *cobra.Command) {
 	if err := cmd.Execute(); err != nil {
-		cause, isUsagePrinter := errors.Unwrap(err).(UsagePrinter)
-		if !isUsagePrinter || cause.PrintUsage() {
+		cause, ok := errors.Unwrap(err).(UsagePrinter)
+		if !ok || cause.PrintUsage() {
 			fmt.Println(cmd.UsageString())
 		}
 

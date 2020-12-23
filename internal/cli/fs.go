@@ -33,7 +33,6 @@ func WriteFile(path string, perm os.FileMode, r io.Reader) error {
 // WriteZip writes the zip contents to the specified filepath
 func WriteZip(basePath string, zipPkg *zip.Reader) error {
 	for _, zipFile := range zipPkg.File {
-		fmt.Println("opening zip file:", basePath, zipFile.Name)
 		path := filepath.Join(basePath, zipFile.Name)
 
 		if zipFile.FileInfo().IsDir() {

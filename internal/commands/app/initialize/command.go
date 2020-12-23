@@ -2,6 +2,7 @@ package initialize
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"path/filepath"
@@ -65,20 +66,17 @@ func (cmd *command) Feedback(profile *cli.Profile, ui terminal.UI) error {
 }
 
 func (cmd *command) initialize(wd string) error {
-	data := []byte(fmt.Sprintf(`{
-    "config_version": %s,
-    "name": %q,
-    "location": %q,
-    "deployment_model": %q,
-    "security": {},
-    "custom_user_data_config": {
-        "enabled": false
-    },
-    "sync": {
-        "development_mode_enabled": false
-    }
-}
-`, realm.DefaultAppConfigVersion, cmd.inputs.Name, cmd.inputs.Location, cmd.inputs.DeploymentModel))
+	appConfig := cli.AppConfig{
+		AppData:         cli.AppData{Name: cmd.inputs.Name},
+		ConfigVersion:   realm.DefaultAppConfigVersion,
+		Location:        cmd.inputs.Location,
+		DeploymentModel: cmd.inputs.DeploymentModel,
+	}
+
+	data, err := json.MarshalIndent(appConfig, cli.ExportedJSONPrefix, cli.ExportedJSONIndent)
+	if err != nil {
+		return fmt.Errorf("failed to write app config: %w", err)
+	}
 
 	return cli.WriteFile(filepath.Join(wd, realm.FileAppConfig), 0666, bytes.NewReader(data))
 }

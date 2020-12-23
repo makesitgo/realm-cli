@@ -2,11 +2,13 @@ package initialize
 
 import (
 	"archive/zip"
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"path/filepath"
 	"testing"
 
+	"github.com/10gen/realm-cli/internal/cli"
 	"github.com/10gen/realm-cli/internal/cloud/realm"
 	"github.com/10gen/realm-cli/internal/utils/test/assert"
 	"github.com/10gen/realm-cli/internal/utils/test/mock"
@@ -36,28 +38,23 @@ func TestAppInitHandler(t *testing.T) {
 
 		cmd := &command{inputs: inputs{
 			Name:            "test-app",
-			DeploymentModel: deploymentModelLocal,
-			Location:        locationSydney,
+			DeploymentModel: cli.AppDeploymentModelLocal,
+			Location:        cli.AppLocationSydney,
 		}}
 
 		assert.Nil(t, cmd.Handler(profile, nil))
 
-		config, err := ioutil.ReadFile(filepath.Join(profile.WorkingDirectory, realm.FileAppConfig))
-		assert.Nil(t, err)
-		assert.Equal(t, `{
-    "config_version": 20200603,
-    "name": "test-app",
-    "location": "AU",
-    "deployment_model": "LOCAL",
-    "security": {},
-    "custom_user_data_config": {
-        "enabled": false
-    },
-    "sync": {
-        "development_mode_enabled": false
-    }
-}
-`, string(config))
+		data, readErr := ioutil.ReadFile(filepath.Join(profile.WorkingDirectory, realm.FileAppConfig))
+		assert.Nil(t, readErr)
+
+		var config cli.AppConfig
+		assert.Nil(t, json.Unmarshal(data, &config))
+		assert.Equal(t, cli.AppConfig{
+			AppData:         cli.AppData{Name: "test-app"},
+			ConfigVersion:   realm.DefaultAppConfigVersion,
+			Location:        cli.AppLocationSydney,
+			DeploymentModel: cli.AppDeploymentModelLocal,
+		}, config)
 	})
 
 	t.Run("Should initialze a templated app when from type is specified to app", func(t *testing.T) {
@@ -95,22 +92,17 @@ func TestAppInitHandler(t *testing.T) {
 		assert.Nil(t, cmd.Handler(profile, nil))
 
 		t.Run("Should have the expected contents in the app config file", func(t *testing.T) {
-			config, err := ioutil.ReadFile(filepath.Join(profile.WorkingDirectory, realm.FileAppConfig))
-			assert.Nil(t, err)
-			assert.Equal(t, `{
-    "config_version": 20200603,
-    "name": "from-app",
-    "location": "IE",
-    "deployment_model": "GLOBAL",
-    "security": {},
-    "custom_user_data_config": {
-        "enabled": false
-    },
-    "sync": {
-        "development_mode_enabled": false
-    }
-}
-`, string(config))
+			data, readErr := ioutil.ReadFile(filepath.Join(profile.WorkingDirectory, realm.FileAppConfig))
+			assert.Nil(t, readErr)
+
+			var config cli.AppConfig
+			assert.Nil(t, json.Unmarshal(data, &config))
+			assert.Equal(t, cli.AppConfig{
+				AppData:         cli.AppData{Name: "from-app"},
+				ConfigVersion:   realm.DefaultAppConfigVersion,
+				Location:        cli.AppLocationIreland,
+				DeploymentModel: cli.AppDeploymentModelGlobal,
+			}, config)
 		})
 
 		t.Run("Should have the expected contents in the api key auth provider config file", func(t *testing.T) {
