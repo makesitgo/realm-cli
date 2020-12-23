@@ -39,16 +39,17 @@ func WriteZip(basePath string, zipPkg *zip.Reader) error {
 			if err := Mkdir(path); err != nil {
 				return err
 			}
-		} else {
-			data, dataErr := zipFile.Open()
-			if dataErr != nil {
-				return dataErr
-			}
-			defer data.Close()
+			continue
+		}
 
-			if err := WriteFile(path, zipFile.Mode(), data); err != nil {
-				return err
-			}
+		data, openErr := zipFile.Open()
+		if openErr != nil {
+			return openErr
+		}
+		defer data.Close()
+
+		if err := WriteFile(path, zipFile.Mode(), data); err != nil {
+			return err
 		}
 	}
 	return nil
