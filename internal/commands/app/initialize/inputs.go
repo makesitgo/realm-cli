@@ -42,7 +42,7 @@ func (i *inputs) Resolve(profile *cli.Profile, ui terminal.UI) error {
 	if i.From != "" {
 		i.FromType = determineFromType(i.From)
 
-		// TODO(REALMC-XXXX): implement Realm app templates
+		// TODO(REALMC-4543): implement Realm app templates
 		// if err := ui.AskOne(&i.FromType, &survey.Select{
 		// 	Message: "Initialize app from what?",
 		// 	Options: []string{fromApp, fromTemplate},
@@ -79,7 +79,7 @@ func (i *inputs) resolveFrom(ui terminal.UI, client realm.Client) (from, error) 
 	case fromTemplate:
 		// do nothing
 
-		// TODO(REALMC-XXXX): implement Realm app templates
+		// TODO(REALMC-4543): implement Realm app templates
 		// template, err := cli.ResolveTemplate(ui, client, realm.TemplateFilter{GroupID: i.Project, Template: i.From})
 		// if err != nil {
 		// 	return from{}, err
@@ -92,7 +92,7 @@ func (i *inputs) resolveFrom(ui terminal.UI, client realm.Client) (from, error) 
 func determineFromType(from string) string {
 	return fromApp
 
-	// TODO(REALMC-XXXX): implement Realm app templates
+	// TODO(REALMC-4543): implement Realm app templates
 	// if strings.HasPrefix(from, "__some_template_prefix?") {
 	// 	return fromTemplate
 	// }

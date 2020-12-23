@@ -90,6 +90,6 @@ func (cmd *command) initializeFromApp(wd, groupID, appID string) error {
 }
 
 func (cmd *command) initializeFromTemplate(wd, templateID string) error {
-	// TODO(REALMC-XXXX): implement Realm app templates
+	// TODO(REALMC-4543): implement Realm app templates
 	return errors.New("initializing from templates is not yet supported")
 }
